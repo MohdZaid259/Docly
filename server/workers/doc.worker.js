@@ -1,6 +1,6 @@
 import { Worker } from "bullmq";
 import connection from "../configs/redis.js";
-import Document from "../models/Doc.model.js";
+import Document from "../models/doc.model.js";
 import { downloadFileFromS3 } from "../services/s3.service.js";
 import { extractPdfText, extractDocxText } from "../utils/extractor.js";
 
