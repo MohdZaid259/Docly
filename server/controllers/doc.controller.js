@@ -1,5 +1,6 @@
 import Document from "../models/doc.model.js";
 import { uploadToS3, deleteFromS3 } from "../services/s3.service.js";
+import { uploadQueue } from "../queues/upload.queue.js";
 
 export const uploadDocument = async (req, res) => {
   try {
@@ -18,6 +19,8 @@ export const uploadDocument = async (req, res) => {
       mimeType: file.mimetype,
       size: file.size,
     });
+
+    await uploadQueue.add("process-document", { documentId: document._id });
 
     res.status(201).json(document);
   } catch (error) {
