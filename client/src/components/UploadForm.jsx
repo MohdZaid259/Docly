@@ -2,11 +2,11 @@ import { useState } from "react";
 import { uploadDocument } from "../api/doc.api";
 import toast from "react-hot-toast";
 
-const allowedExtensions = [".pdf", ".doc", ".docx"];
+const allowedExtensions = [".pdf", ".docx", ".txt"];
 const allowedMimeTypes = [
   "application/pdf",
-  "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "text/plain",
 ];
 
 const isAllowedFile = (selectedFile) => {
@@ -29,7 +29,7 @@ const UploadForm = () => {
     const selectedFile = e.target.files[0];
 
     if (selectedFile && !isAllowedFile(selectedFile)) {
-      toast.error("Only PDF, DOC, and DOCX files are allowed.");
+      toast.error("Only PDF, DOCX, and TXT files are allowed.");
       e.target.value = "";
       setFile(null);
       return;
@@ -42,7 +42,7 @@ const UploadForm = () => {
     e.preventDefault();
 
     if (!file) {
-      toast.error("Please select a PDF or Word document to upload.");
+      toast.error("Please select a PDF, DOCX, or TXT file to upload.");
       return;
     }
 
@@ -66,7 +66,7 @@ const UploadForm = () => {
     <form onSubmit={handleSubmit} className="glass-panel p-5">
       <div className="mb-4 text-center sm:text-left">
         <h3 className="text-lg font-semibold text-white">Upload a document</h3>
-        <p className="mt-1 text-sm text-slate-400">Accepted files: PDF, DOC, DOCX</p>
+        <p className="mt-1 text-sm text-slate-400">Accepted files: PDF, DOCX, TXT</p>
       </div>
 
       <label
@@ -82,7 +82,7 @@ const UploadForm = () => {
           if (!droppedFile) return;
 
           if (!isAllowedFile(droppedFile)) {
-            toast.error("Only PDF, DOC, and DOCX files are allowed.");
+            toast.error("Only PDF, DOCX, and TXT files are allowed.");
             return;
           }
 
@@ -97,11 +97,11 @@ const UploadForm = () => {
         <span className="text-sm font-medium text-slate-100">
           {file ? file.name : "Choose a file to upload"}
         </span>
-        <span className="mt-2 text-xs text-slate-400">PDF or Word document</span>
+        <span className="mt-2 text-xs text-slate-400">PDF, Word, or text document</span>
         <input
           type="file"
           className="hidden"
-          accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+          accept=".pdf,.docx,.txt,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain"
           onChange={handleFileChange}
         />
       </label>

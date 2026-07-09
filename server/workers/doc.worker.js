@@ -2,7 +2,7 @@ import { Worker } from "bullmq";
 import connection from "../configs/redis.js";
 import Document from "../models/doc.model.js";
 import { downloadFileFromS3 } from "../services/s3.service.js";
-import { extractPdfText, extractDocxText } from "../utils/extractor.js";
+import { extractPdfText, extractDocxText, extractTxtText } from "../utils/extractor.js";
 import { chunkText } from "../utils/chunkText.js";
 import Chunk from "../models/chunk.model.js";
 import { createEmbedding } from "../services/embedding.service.js";
@@ -32,6 +32,8 @@ const worker = new Worker("document-processing",
 
       if (document.mimeType === "application/pdf") {
         extractedText = await extractPdfText(buffer);
+      } else if (document.mimeType === "text/plain") {
+        extractedText = extractTxtText(buffer);
       } else {
         extractedText = await extractDocxText(buffer);
       }

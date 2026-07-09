@@ -18,7 +18,7 @@ const DashboardPage = () => {
         <header className="glass-panel px-5 py-5 sm:px-6 sm:py-6">
           <div className="flex flex-col gap-4 text-center sm:flex-row sm:items-center sm:justify-between sm:text-left">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.35em] text-indigo-300">IDoc</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.35em] text-indigo-300">Docly</p>
               <h2 className="mt-2 text-2xl font-semibold text-white sm:text-3xl">Welcome back, {user?.name || "there"}</h2>
               <p className="mt-2 text-sm text-slate-400">Keep your documents organized and easy to review.</p>
             </div>

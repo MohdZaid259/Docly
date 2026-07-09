@@ -14,3 +14,5 @@ export const extractDocxText = async (buffer) => {
 
   return data.value;
 };
+
+export const extractTxtText = (buffer) => buffer.toString("utf-8");
