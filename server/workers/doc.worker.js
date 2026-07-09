@@ -3,6 +3,10 @@ import connection from "../configs/redis.js";
 import Document from "../models/doc.model.js";
 import { downloadFileFromS3 } from "../services/s3.service.js";
 import { extractPdfText, extractDocxText } from "../utils/extractor.js";
+import { chunkText } from "../utils/chunkText.js";
+import Chunk from "../models/Chunk.model.js";
+import { createEmbedding } from "../services/embedding.service.js";
+import { generateSummary } from "../services/summary.service.js";
 
 console.log("🚀 Doc worker started");
 
@@ -32,9 +36,33 @@ const worker = new Worker("document-processing",
         extractedText = await extractDocxText(buffer);
       }
 
+      const summary = await generateSummary(extractedText);
+
+      await Document.findByIdAndUpdate(documentId, {
+        summary
+      });
+
+      const chunks = chunkText(extractedText);
+
+      const embeddings = await Promise.all(
+          chunks.map(chunk =>
+            createEmbedding(chunk)
+          )
+        );
+
+      await Chunk.insertMany(
+        chunks.map((text, index) => ({
+          document: documentId,
+          chunkIndex: index,
+          text,
+          embedding: embeddings[index]
+        }))
+      );
+
       await Document.findByIdAndUpdate(documentId, {
         status: "completed",
         extractedText,
+        summary
       });
 
       console.log(`Document processed: ${document.fileName}`);
