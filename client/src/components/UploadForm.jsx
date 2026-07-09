@@ -20,7 +20,7 @@ const isAllowedFile = (selectedFile) => {
   );
 };
 
-const UploadForm = () => {
+const UploadForm = ({ onUploaded, hideTitle = false }) => {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
@@ -55,6 +55,7 @@ const UploadForm = () => {
       toast.success("Document uploaded successfully");
       setFile(null);
       e.target.reset();
+      onUploaded?.();
     } catch (error) {
       toast.error(error?.response?.data?.message || "Upload failed");
     } finally {
@@ -63,11 +64,13 @@ const UploadForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="glass-panel p-5">
-      <div className="mb-4 text-center sm:text-left">
-        <h3 className="text-lg font-semibold text-white">Upload a document</h3>
-        <p className="mt-1 text-sm text-slate-400">Accepted files: PDF, DOCX, TXT</p>
-      </div>
+    <form onSubmit={handleSubmit} className={hideTitle ? "" : "glass-panel p-5"}>
+      {!hideTitle && (
+        <div className="mb-4 text-center sm:text-left">
+          <h3 className="text-lg font-semibold text-white">Upload a document</h3>
+          <p className="mt-1 text-sm text-slate-400">Accepted files: PDF, DOCX, TXT</p>
+        </div>
+      )}
 
       <label
         onDragOver={(e) => {
