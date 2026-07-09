@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Chunk from "../models/Chunk.model.js";
+import Chunk from "../models/chunk.model.js";
 import { createEmbedding } from "./embedding.service.js";
 
 export const searchChunks = async (documentId, query) => {

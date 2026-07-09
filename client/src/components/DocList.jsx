@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getDocuments, deleteDocument } from "../api/doc.api";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import { getStatusColor } from "../helpers/statusColor";
 
 const DocumentList = () => {
   const [documents, setDocuments] = useState([]);
@@ -56,6 +57,7 @@ const DocumentList = () => {
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
                 <h4 className="truncate font-medium text-white">{doc.fileName}</h4>
+                <p className={`mt-1 text-sm ${getStatusColor(doc.status)}`}>{doc.status}</p>
                 <p className="mt-1 text-sm text-slate-400">{(doc.size / 1024).toFixed(2)} KB</p>
               </div>
 

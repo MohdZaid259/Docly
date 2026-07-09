@@ -1,4 +1,5 @@
 import Document from "../models/doc.model.js";
+import Chunk from "../models/chunk.model.js";
 import { uploadToS3, deleteFromS3 } from "../services/s3.service.js";
 import { uploadQueue } from "../queues/upload.queue.js";
 
@@ -75,6 +76,7 @@ export const deleteDocument = async (req, res) => {
       await deleteFromS3(document.s3Key);
     }
 
+    await Chunk.deleteMany({ document: document._id });
     await document.deleteOne();
 
     res.json({ message: "Deleted successfully" });

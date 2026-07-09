@@ -4,7 +4,7 @@ import Document from "../models/doc.model.js";
 import { downloadFileFromS3 } from "../services/s3.service.js";
 import { extractPdfText, extractDocxText } from "../utils/extractor.js";
 import { chunkText } from "../utils/chunkText.js";
-import Chunk from "../models/Chunk.model.js";
+import Chunk from "../models/chunk.model.js";
 import { createEmbedding } from "../services/embedding.service.js";
 import { generateSummary } from "../services/summary.service.js";
 
