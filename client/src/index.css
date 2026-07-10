@@ -91,6 +91,18 @@
   .glass-panel {
     @apply rounded-[24px] border border-white/10 bg-slate-900/70 backdrop-blur-xl shadow-[0_25px_120px_-35px_rgba(99,102,241,0.45)];
   }
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 font-semibold py-3 px-8 rounded-full transition-colors;
+  }
+
+  .btn-secondary {
+    @apply border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground py-3 px-8 rounded-full transition-colors font-semibold;
+  }
+
+  .card-minimal {
+    @apply border border-border bg-card rounded-lg p-6 hover:border-primary transition-colors;
+  }
 }
 
 .message-bubble {

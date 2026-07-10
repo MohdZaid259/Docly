@@ -13,7 +13,7 @@ const GoogleLoginButton = () => {
       localStorage.setItem("token", res.data.token);
 
       await fetchCurrentUser();
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       console.log(error);
     }

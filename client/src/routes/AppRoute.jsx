@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
+import LandingPage from "../pages/LandingPage";
 import LoginPage from "../pages/LoginPage";
 import DashboardPage from "../pages/DashboardPage";
 import DocumentDetailsPage from "../pages/DocDetailsPage";
@@ -12,10 +13,15 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route
+        path="/"
+        element={user ? <Navigate to="/dashboard" /> : <LandingPage />}
+      />
+
+      <Route
         path="/login"
         element={
           user ? (
-            <Navigate to="/" />
+            <Navigate to="/dashboard" />
           ) : (
             <LoginPage />
           )
@@ -29,7 +35,7 @@ const AppRoutes = () => {
           </ProtectedRoute>
         }
       >
-        <Route path="/" element={<DashboardPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/documents/:id" element={<DocumentDetailsPage />} />
       </Route>
 

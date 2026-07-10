@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const navItems = [{ to: "/", label: "Dashboard", icon: LayoutDashboard, end: true }];
+const navItems = [{ to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, end: true }];
 
 const SidebarNav = () => (
   <nav className="flex flex-col gap-1">
