@@ -36,15 +36,13 @@ export default function Nav() {
             >
               Pricing
             </a>
-          </div>
-
-          <div className="hidden md:flex items-center gap-3">
-            <Link to="/login" className="text-muted-foreground hover:text-foreground transition-colors text-sm">
-              Log in
-            </Link>
-            <Link to="/login" className="btn-primary">
-              Get Started
-            </Link>
+            <a
+              href="#faq"
+              onClick={(e) => scrollToSection(e, "faq")}
+              className="text-muted-foreground hover:text-foreground transition-colors text-sm"
+            >
+              FAQ
+            </a>
           </div>
 
           <button
@@ -71,14 +69,13 @@ export default function Nav() {
             >
               Pricing
             </a>
-            <div className="border-t border-border pt-3 px-4 space-y-3">
-              <Link to="/login" className="block text-muted-foreground hover:text-foreground transition-colors">
-                Log in
-              </Link>
-              <Link to="/login" className="block btn-primary text-center">
-                Get Started
-              </Link>
-            </div>
+            <a
+              href="#faq"
+              onClick={(e) => scrollToSection(e, "faq")}
+              className="block px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
+            >
+              FAQ
+            </a>
           </div>
         )}
       </div>

@@ -29,7 +29,7 @@ export default function Features() {
     <section className="py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold text-balance text-center mb-10">
-          Built for real work
+          Built for <span className="text-primary">real work</span>
         </h2>
 
         <div className="grid md:grid-cols-2 gap-6 items-stretch">

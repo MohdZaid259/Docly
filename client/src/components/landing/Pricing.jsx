@@ -52,7 +52,7 @@ export default function Pricing() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-10">
           <h2 className="text-4xl md:text-5xl font-bold text-balance">
-            Simple pricing
+            Simple <span className="text-primary">pricing</span>
           </h2>
         </div>
 

@@ -74,7 +74,7 @@ export default function Footer() {
 
         <div className="border-t border-border pt-8">
           <p className="text-muted-foreground text-sm text-center">
-            © {currentYear} Docly. All rights reserved.
+            © {currentYear} Docly. All rights reserved. Powered by MeshAPI.
           </p>
         </div>
       </div>

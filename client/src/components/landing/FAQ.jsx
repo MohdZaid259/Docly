@@ -36,7 +36,7 @@ export default function FAQ() {
     <section id="faq" className="py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold text-balance text-center mb-10">
-          Common questions
+          Common <span className="text-primary">questions</span>
         </h2>
 
         <div className="space-y-3">

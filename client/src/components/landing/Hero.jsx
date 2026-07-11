@@ -8,7 +8,7 @@ export default function Hero() {
         <div className="flex flex-col items-center text-center">
           <div className="space-y-6 max-w-2xl">
             <div className="inline-block px-4 py-2 border border-primary/30 rounded-full text-sm text-muted-foreground">
-              Ask anything, get answers with sources
+              Powered by <span className="text-primary font-semibold">MeshAPI</span>
             </div>
 
             <h1 className="text-5xl md:text-6xl font-bold text-balance leading-tight">
@@ -23,9 +23,6 @@ export default function Hero() {
               <Link to="/login" className="btn-primary flex items-center justify-center gap-2">
                 Start Free <ArrowRight className="w-4 h-4" />
               </Link>
-              <a href="#how" className="btn-secondary flex items-center justify-center gap-2">
-                See how it works
-              </a>
             </div>
 
             <p className="text-sm text-muted-foreground">
