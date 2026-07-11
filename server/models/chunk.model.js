@@ -15,6 +15,10 @@ const chunkSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    page: {
+      type: Number,
+      default: null,
+    },
     embedding: {
       type: [Number],
       default: []

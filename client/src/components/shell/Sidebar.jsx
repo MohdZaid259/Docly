@@ -1,8 +1,12 @@
 import { NavLink } from "react-router-dom";
-import { LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, FileText, MessagesSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const navItems = [{ to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, end: true }];
+const navItems = [
+  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard, end: true },
+  { to: "/documents", label: "Documents", icon: FileText, end: false },
+  { to: "/global-chat", label: "Global Chat", icon: MessagesSquare, end: false },
+];
 
 const SidebarNav = () => (
   <nav className="flex flex-col gap-1">

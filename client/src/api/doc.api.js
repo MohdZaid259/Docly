@@ -15,3 +15,7 @@ export const getDocumentById = (id) => {
 export const deleteDocument = (id) => {
   return axiosInstance.delete(`/documents/${id}`);
 };
+
+export const toggleDocumentPin = (id) => {
+  return axiosInstance.patch(`/documents/${id}/pin`);
+};

@@ -28,15 +28,17 @@ const worker = new Worker("document-processing",
         document.s3Key
       );
 
-      let extractedText = "";
+      let extracted;
 
       if (document.mimeType === "application/pdf") {
-        extractedText = await extractPdfText(buffer);
+        extracted = await extractPdfText(buffer);
       } else if (document.mimeType === "text/plain") {
-        extractedText = extractTxtText(buffer);
+        extracted = extractTxtText(buffer);
       } else {
-        extractedText = await extractDocxText(buffer);
+        extracted = await extractDocxText(buffer);
       }
+
+      const extractedText = extracted.text;
 
       const summary = await generateSummary(extractedText);
 
@@ -44,19 +46,20 @@ const worker = new Worker("document-processing",
         summary
       });
 
-      const chunks = chunkText(extractedText);
+      const chunks = chunkText(extracted.pages);
 
       const embeddings = await Promise.all(
           chunks.map(chunk =>
-            createEmbedding(chunk)
+            createEmbedding(chunk.text)
           )
         );
 
       await Chunk.insertMany(
-        chunks.map((text, index) => ({
+        chunks.map((chunk, index) => ({
           document: documentId,
           chunkIndex: index,
-          text,
+          text: chunk.text,
+          page: chunk.page,
           embedding: embeddings[index]
         }))
       );

@@ -13,3 +13,19 @@ export const getStatusColor = (status) => {
       return "text-slate-400";
   }
 };
+
+export const getStatusBadgeVariant = (status) => {
+  switch (status) {
+    case "completed":
+      return "success";
+
+    case "processing":
+      return "warning";
+
+    case "failed":
+      return "destructive";
+
+    default:
+      return "secondary";
+  }
+};

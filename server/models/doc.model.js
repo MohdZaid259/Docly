@@ -39,6 +39,10 @@ const documentSchema = new mongoose.Schema(
     extractedText: {
       type: String,
       default: null
+    },
+    pinned: {
+      type: Boolean,
+      default: false
     }
   },
   { timestamps: true }

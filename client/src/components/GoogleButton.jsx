@@ -20,7 +20,7 @@ const GoogleLoginButton = () => {
   };
 
   return (
-    <div className="w-full max-w-xs rounded-2xl border border-white/10 bg-white/10 p-3 shadow-inner shadow-black/20">
+    <div className="w-full max-w-xs rounded-2xl border border-border bg-muted/50 p-3">
       <GoogleLogin
         onSuccess={handleSuccess}
         onError={() => console.log("Login Failed")}

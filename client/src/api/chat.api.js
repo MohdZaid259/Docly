@@ -4,14 +4,14 @@ export const askQuestion = (documentId, question, messages) => {
   return axiosInstance.post("/chat", { documentId, question, messages });
 };
 
-export const streamQuestion = async ({documentId, question, messages, token, onToken, onDone}) => {
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/chat/stream`, {
+const streamFromEndpoint = async (path, body, { token, onToken, onDone }) => {
+  const response = await fetch(`${import.meta.env.VITE_API_URL}${path}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ documentId, question, messages }),
+    body: JSON.stringify(body),
   });
 
   if (!response.ok) {
@@ -58,4 +58,20 @@ export const streamQuestion = async ({documentId, question, messages, token, onT
       }
     }
   }
+};
+
+export const streamQuestion = ({ documentId, question, messages, chatId, token, onToken, onDone }) => {
+  return streamFromEndpoint(
+    "/chat/stream",
+    { documentId, question, messages, chatId },
+    { token, onToken, onDone }
+  );
+};
+
+export const streamGlobalQuestion = ({ documentIds, question, messages, chatId, token, onToken, onDone }) => {
+  return streamFromEndpoint(
+    "/chat/global/stream",
+    { documentIds, question, messages, chatId },
+    { token, onToken, onDone }
+  );
 };

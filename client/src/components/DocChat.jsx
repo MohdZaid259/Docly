@@ -1,12 +1,58 @@
 import { useEffect, useRef, useState } from "react";
 import { streamQuestion } from "../api/chat.api";
+import { listConversations, createConversation, getConversation, deleteConversation } from "../api/conversation.api";
 import toast from "react-hot-toast";
+import { RotateCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-const DocumentChat = ({ documentId }) => {
+const toSources = (citations = []) =>
+  citations.map((citation) => ({ text: citation.text, score: citation.score, page: citation.page }));
+
+const DocumentChat = ({ documentId, onCitationClick }) => {
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
+  const [initializing, setInitializing] = useState(true);
   const [messages, setMessages] = useState([]);
+  const [chatId, setChatId] = useState(null);
   const endRef = useRef(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const initChat = async () => {
+      setInitializing(true);
+      try {
+        const listRes = await listConversations({ documentId, scope: "document" });
+        let conversation = listRes.data[0];
+
+        if (!conversation) {
+          const createRes = await createConversation({ scope: "document", documentId });
+          conversation = createRes.data;
+        }
+
+        const detailRes = await getConversation(conversation._id);
+        if (cancelled) return;
+
+        setChatId(conversation._id);
+        setMessages(
+          detailRes.data.messages.map((message) => ({
+            role: message.role,
+            content: message.content,
+            sources: toSources(message.citations),
+          }))
+        );
+      } catch (error) {
+        console.error(error);
+      } finally {
+        if (!cancelled) setInitializing(false);
+      }
+    };
+
+    initChat();
+    return () => {
+      cancelled = true;
+    };
+  }, [documentId]);
 
   useEffect(() => {
     if (!loading) {
@@ -14,11 +60,25 @@ const DocumentChat = ({ documentId }) => {
     }
   }, [messages]);
 
+  const handleClearChat = async () => {
+    if (!chatId) return;
+    try {
+      await deleteConversation(chatId);
+      const createRes = await createConversation({ scope: "document", documentId });
+      setChatId(createRes.data._id);
+      setMessages([]);
+      toast.success("Chat history cleared");
+    } catch (error) {
+      console.error(error);
+      toast.error("Couldn't clear chat history");
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const currentQuestion = question.trim();
 
-    if (!currentQuestion || loading) return;
+    if (!currentQuestion || loading || initializing) return;
 
     const userMessage = { role: "user", content: currentQuestion };
     const assistantMessage = { role: "assistant", content: "", sources: [] };
@@ -34,6 +94,7 @@ const DocumentChat = ({ documentId }) => {
         documentId,
         question: currentQuestion,
         messages: conversationHistory,
+        chatId,
         token: localStorage.getItem("token"),
         onToken: (token) => {
           setMessages((prev) => {
@@ -83,21 +144,38 @@ const DocumentChat = ({ documentId }) => {
   };
 
   return (
-    <div className="flex flex-col max-h-[78vh] rounded-[24px] border border-white/10 bg-slate-900/70 p-4 sm:p-5">
+    <div className="flex flex-col max-h-[78vh] rounded-2xl border border-border bg-card p-4 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h3 className="text-lg font-semibold text-white">AI Chat</h3>
-          <p className="text-sm text-slate-400">Ask questions about this document in real time.</p>
+          <h3 className="text-lg font-semibold text-foreground">AI Chat</h3>
+          <p className="text-sm text-muted-foreground">Ask questions about this document in real time.</p>
         </div>
-        <div className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
-          Live answers
+        <div className="flex items-center gap-2">
+          <div className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-300">
+            Live answers
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleClearChat}
+            disabled={initializing || !messages.length}
+          >
+            <RotateCcw className="size-3.5" />
+            Clear chat
+          </Button>
         </div>
       </div>
 
-      <div className="chat-scroll mt-4 max-h-[56vh] min-h-[240px] space-y-3 overflow-y-auto rounded-2xl bg-slate-950/50 p-3 sm:p-4">
-        {messages.length === 0 && !loading && (
-          <div className="message-bubble rounded-2xl border border-indigo-400/20 bg-indigo-500/10 p-4 text-sm leading-6 text-slate-300">
-            Ask anything about the document and I’ll answer from the uploaded content.
+      <div className="chat-scroll mt-4 max-h-[56vh] min-h-[240px] space-y-3 overflow-y-auto rounded-2xl bg-muted/40 p-3 sm:p-4">
+        {initializing && (
+          <div className="message-bubble rounded-2xl border border-border bg-card p-4 text-sm leading-6 text-muted-foreground">
+            Loading conversation...
+          </div>
+        )}
+
+        {!initializing && messages.length === 0 && !loading && (
+          <div className="message-bubble rounded-2xl border border-primary/20 bg-primary/10 p-4 text-sm leading-6 text-foreground">
+            Ask anything about the document and I'll answer from the uploaded content.
           </div>
         )}
 
@@ -111,16 +189,23 @@ const DocumentChat = ({ documentId }) => {
               key={`${message.role}-${index}`}
               className={`message-bubble rounded-2xl px-4 py-3 text-sm leading-6 shadow-sm ${
                 message.role === "user"
-                  ? "ml-auto max-w-[92%] border border-indigo-400/20 bg-indigo-500/20 text-white"
-                  : "mr-auto max-w-full border border-white/10 bg-white/5 text-slate-200 sm:max-w-[92%]"
+                  ? "ml-auto max-w-[92%] border border-primary/20 bg-primary/20 text-foreground"
+                  : "mr-auto max-w-full border border-border bg-background text-foreground sm:max-w-[92%]"
               }`}
             >
               <div className="whitespace-pre-wrap">{message.content}</div>
               {message.role === "assistant" && message.sources?.length > 0 && (
                 <div className="mt-2 flex flex-wrap items-center gap-2">
-                  <span className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-300">
-                    {(Math.max(...message.sources.map((source) => source.score), 0) * 100).toFixed(0)}% relevance
-                  </span>
+                  {message.sources.map((source, sourceIndex) => (
+                    <button
+                      key={sourceIndex}
+                      type="button"
+                      onClick={() => onCitationClick?.(source)}
+                      className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-600 transition hover:bg-emerald-500/20 dark:text-emerald-300"
+                    >
+                      {source.page ? `Page ${source.page}` : `${Math.round(source.score * 100)}% match`}
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
@@ -128,11 +213,11 @@ const DocumentChat = ({ documentId }) => {
         })}
 
         {loading && (
-          <div className="message-bubble mr-auto max-w-[84%] rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
+          <div className="message-bubble mr-auto max-w-[84%] rounded-2xl border border-border bg-background px-4 py-3 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
-              <span className="typing-dot h-2.5 w-2.5 rounded-full bg-indigo-400" />
-              <span className="typing-dot h-2.5 w-2.5 rounded-full bg-cyan-400" />
-              <span className="typing-dot h-2.5 w-2.5 rounded-full bg-emerald-400" />
+              <span className="typing-dot h-2.5 w-2.5 rounded-full bg-primary" />
+              <span className="typing-dot h-2.5 w-2.5 rounded-full bg-primary" />
+              <span className="typing-dot h-2.5 w-2.5 rounded-full bg-primary" />
             </div>
           </div>
         )}
@@ -145,15 +230,13 @@ const DocumentChat = ({ documentId }) => {
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="Ask about this document..."
-          className="min-h-[48px] flex-1 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white outline-none transition focus:border-indigo-400 focus:bg-slate-800/70"
+          disabled={initializing}
+          className="min-h-12 flex-1 rounded-2xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary disabled:opacity-60"
         />
 
-        <button
-          disabled={loading}
-          className="rounded-2xl bg-gradient-to-r from-indigo-500 to-cyan-400 px-4 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-        >
+        <Button type="submit" disabled={loading || initializing} className="min-h-12 rounded-2xl px-5">
           {loading ? "Thinking..." : "Send"}
-        </button>
+        </Button>
       </form>
     </div>
   );

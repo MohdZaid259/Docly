@@ -3,7 +3,11 @@ import useAuth from "../hooks/useAuth";
 import LandingPage from "../pages/LandingPage";
 import LoginPage from "../pages/LoginPage";
 import DashboardPage from "../pages/DashboardPage";
+import DocumentsPage from "../pages/DocumentsPage";
 import DocumentDetailsPage from "../pages/DocDetailsPage";
+import GlobalChatPage from "../pages/GlobalChatPage";
+import ProfilePage from "../pages/ProfilePage";
+import BillingPage from "../pages/BillingPage";
 import ProtectedRoute from "../utils/protectedRoute.jsx";
 import AppShell from "../layouts/AppShell.jsx";
 
@@ -36,7 +40,11 @@ const AppRoutes = () => {
         }
       >
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/documents" element={<DocumentsPage />} />
         <Route path="/documents/:id" element={<DocumentDetailsPage />} />
+        <Route path="/global-chat" element={<GlobalChatPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/billing" element={<BillingPage />} />
       </Route>
 
       <Route

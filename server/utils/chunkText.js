@@ -1,21 +1,24 @@
 export const chunkText = (
-  text,
+  pages,
   chunkSize = 500,
   overlap = 100
 ) => {
-  const words = text.split(/\s+/);
-
   const chunks = [];
-  let start = 0;
 
-  while (start < words.length) {
-    const end = start + chunkSize;
+  for (const { page, text } of pages) {
+    const words = text.split(/\s+/).filter(Boolean);
+    let start = 0;
 
-    chunks.push(
-      words.slice(start, end).join(" ")
-    );
+    while (start < words.length) {
+      const end = start + chunkSize;
+      const chunkWords = words.slice(start, end);
 
-    start += chunkSize - overlap;
+      if (chunkWords.length > 0) {
+        chunks.push({ page, text: chunkWords.join(" ") });
+      }
+
+      start += chunkSize - overlap;
+    }
   }
 
   return chunks;
