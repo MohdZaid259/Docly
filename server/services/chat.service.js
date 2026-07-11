@@ -3,7 +3,7 @@ import OpenAI from "openai";
 
 export const openai = new OpenAI({
   apiKey: process.env.MESHAPI_KEY,
-  baseURL: "https://openrouter.ai/api/v1",
+  baseURL: "https://api.meshapi.ai/v1",
 });
 
 const SYSTEM_PROMPT = `
