@@ -75,9 +75,7 @@ const GlobalChatPage = () => {
   }, []);
 
   useEffect(() => {
-    if (!loading) {
-      endRef.current?.scrollIntoView({ behavior: "smooth" });
-    }
+    endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages]);
 
   const toggleDocument = (docId) => {

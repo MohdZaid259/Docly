@@ -75,7 +75,7 @@ const DocumentDetailsPage = () => {
                 <TabsTrigger value="info">Info</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="chat">
+              <TabsContent value="chat" forceMount className="data-[state=inactive]:hidden">
                 <DocumentChat
                   documentId={document._id}
                   onCitationClick={(source) => {

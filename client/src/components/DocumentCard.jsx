@@ -15,6 +15,15 @@ import { formatFileSize } from "@/helpers/formatFileSize";
 import { getStatusBadgeVariant } from "@/helpers/statusColor";
 import { deleteDocument, toggleDocumentPin } from "@/api/doc.api";
 
+const STAGE_LABELS = {
+  downloading: "downloading",
+  extracting: "extracting text",
+  summarizing: "generating summary",
+  chunking: "chunking",
+  embedding: "generating embeddings",
+  saving: "saving",
+};
+
 const DocumentCard = ({ document, onDeleted, onPinToggled }) => {
   const handleDelete = async () => {
     try {
@@ -78,8 +87,11 @@ const DocumentCard = ({ document, onDeleted, onPinToggled }) => {
         </div>
       </div>
 
-      <div className="mt-3">
+      <div className="mt-3 flex items-center gap-2">
         <Badge variant={getStatusBadgeVariant(document.status)}>{document.status}</Badge>
+        {document.status === "processing" && STAGE_LABELS[document.processingStage] && (
+          <span className="text-xs text-muted-foreground">{STAGE_LABELS[document.processingStage]}</span>
+        )}
       </div>
     </Card>
   );

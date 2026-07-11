@@ -32,6 +32,11 @@ const documentSchema = new mongoose.Schema(
       enum: ["uploaded", "processing", "completed", "failed"],
       default: "uploaded"
     },
+    processingStage: {
+      type: String,
+      enum: ["downloading", "extracting", "summarizing", "chunking", "embedding", "saving", null],
+      default: null
+    },
     summary: {
       type: String,
       default: null

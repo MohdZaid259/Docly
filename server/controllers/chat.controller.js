@@ -2,6 +2,7 @@ import Document from "../models/doc.model.js";
 import Chat from "../models/chat.model.js";
 import Message from "../models/message.model.js";
 import { askQuestion, streamQuestion, streamGlobalQuestion } from "../services/chat.service.js";
+import { validateQuestion } from "../utils/validateQuestion.js";
 
 const toCitations = (sources, document) =>
   sources.map((source) => ({
@@ -36,6 +37,11 @@ export const chat = async (req, res) => {
   try {
     const { documentId, question, messages = [], chatId } = req.body;
 
+    const validationError = validateQuestion(question);
+    if (validationError) {
+      return res.status(400).json({ message: validationError });
+    }
+
     const document = await Document.findOne({ _id: documentId, user: req.userId });
     if (!document) {
       return res.status(404).json({ message: "Document not found" });
@@ -62,6 +68,11 @@ export const chat = async (req, res) => {
 export const streamChat = async (req, res) => {
   try {
     const { documentId, question, messages = [], chatId } = req.body;
+
+    const validationError = validateQuestion(question);
+    if (validationError) {
+      return res.status(400).json({ message: validationError });
+    }
 
     const document = await Document.findOne({ _id: documentId, user: req.userId });
     if (!document) {
@@ -120,6 +131,11 @@ export const streamChat = async (req, res) => {
 export const streamGlobalChat = async (req, res) => {
   try {
     const { documentIds = [], question, messages = [], chatId } = req.body;
+
+    const validationError = validateQuestion(question);
+    if (validationError) {
+      return res.status(400).json({ message: validationError });
+    }
 
     let resolvedIds = documentIds;
     if (resolvedIds.length > 0) {

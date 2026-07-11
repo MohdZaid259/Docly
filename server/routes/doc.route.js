@@ -1,6 +1,7 @@
 import express from "express";
 import authMiddleware from "../middlewares/auth.middleware.js";
 import upload from "../middlewares/upload.middleware.js";
+import { uploadLimiter } from "../middlewares/rateLimit.middleware.js";
 import { uploadDocument, getDocuments, deleteDocument, getDocumentById, getDocumentFile, togglePin } from "../controllers/doc.controller.js";
 
 const router = express.Router();
@@ -17,7 +18,7 @@ const handleUploadError = (req, res, next) => {
 };
 
 router.get("/", getDocuments);
-router.post("/upload", handleUploadError, uploadDocument);
+router.post("/upload", uploadLimiter, handleUploadError, uploadDocument);
 router.get("/:id", getDocumentById);
 router.get("/:id/file", getDocumentFile);
 router.patch("/:id/pin", togglePin);
