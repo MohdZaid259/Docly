@@ -1,42 +1,43 @@
-# Docly server
-
-## Environment
-
-Copy `.env.example` to `.env` and fill in every value. `MESHAPI_KEY` is the OpenRouter API key used for both chat completions and embeddings (`services/chat.service.js`, `services/embedding.service.js`).
-
-## Required: MongoDB Atlas Search vector index
-
-Vector search (`services/search.service.js`) requires **MongoDB Atlas** — the `$vectorSearch` aggregation stage does not work on a self-hosted/community MongoDB deployment. This index cannot be created via Mongoose/application code; it must be created once per environment through the Atlas UI, `mongosh`, or the Atlas Admin API.
-
-Create a **Search Index** (type: *Vector Search*) on the `chunks` collection:
-
-- **Index name:** `vector-index` (must match exactly — this is hardcoded in `search.service.js`)
-- **Field to index:** `embedding`
-- **Dimensions:** `1536` (matches `openai/text-embedding-3-small`, used in `services/embedding.service.js` — if you change the embedding model, update this to match)
-- **Similarity:** `cosine`
-
-Example index definition (Atlas UI → your cluster → Search → Create Search Index → JSON Editor):
-
-```json
-{
-  "fields": [
-    {
-      "type": "vector",
-      "path": "embedding",
-      "numDimensions": 1536,
-      "similarity": "cosine"
-    }
-  ]
-}
-```
-
-Without this index, both single-document chat/search and global chat will fail at query time (the `$vectorSearch` stage errors if the named index doesn't exist).
-
-## Running locally
-
+# Docly Server
+## Setup
+### 1. Install dependencies
 ```bash
 npm install
-npm run dev   # starts the API server + the BullMQ document-processing worker (server/index.js imports workers/doc.worker.js)
 ```
+### 2. Configure environment variables
+Copy the example environment file:
+```bash
+cp .env.example .env
+```
+Fill in all required values before starting the server.
+---
+## MongoDB Atlas Vector Search
+This project uses **MongoDB Atlas Vector Search** to retrieve relevant document chunks. A vector index must be created before the chat feature will work.
 
-Requires a reachable Redis instance (`REDIS_URL` or `REDIS_HOST`/`REDIS_PORT`) for the upload processing queue, and an S3 bucket for document storage.
+Create a **Vector Search Index** on the **`chunks`** collection with the following configuration:
+
+| Setting      | Value          |
+| ------------ | -------------- |
+| Index Name   | `vector-index` |
+| Vector Field | `embedding`    |
+| Dimensions   | `1536`         |
+| Similarity   | `cosine`       |
+| Filter Field | `document`     |
+---
+
+## Start the application
+Run the development server:
+```bash
+npm run dev
+```
+This starts:
+* Express API
+* BullMQ document processing worker
+---
+## Prerequisites
+Before running the project, make sure the following services are available:
+* MongoDB Atlas
+* Redis
+* AWS S3 Bucket
+* MeshAPI Key
+Once these are configured, the server is ready to process uploaded documents and answer questions using semantic search.
