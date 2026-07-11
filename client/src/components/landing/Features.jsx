@@ -13,11 +13,6 @@ const supporting = [
     description: "Cross-reference your whole library in a single question.",
   },
   {
-    icon: FolderOpen,
-    title: "Folders, tags & pins",
-    description: "Keep a growing library easy to navigate.",
-  },
-  {
     icon: Lock,
     title: "Private by default",
     description: "Your documents are never used to train models.",
@@ -26,7 +21,7 @@ const supporting = [
 
 export default function Features() {
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8">
+    <section id="how" className="py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold text-balance text-center mb-10">
           Built for <span className="text-primary">real work</span>
@@ -62,7 +57,9 @@ export default function Features() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-80px" }}
                   transition={{ duration: 0.4, delay: idx * 0.06 }}
-                  className="card-minimal space-y-2"
+                  className={`card-minimal space-y-2 ${
+                    idx === 2 ? "sm:col-span-2" : ""
+                  }`}
                 >
                   <Icon className="w-5 h-5 text-primary" />
                   <h3 className="font-semibold text-foreground text-sm">

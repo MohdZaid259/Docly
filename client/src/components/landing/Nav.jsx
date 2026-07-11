@@ -27,7 +27,7 @@ export default function Nav() {
               onClick={(e) => scrollToSection(e, "how")}
               className="text-muted-foreground hover:text-foreground transition-colors text-sm"
             >
-              How It Works
+              Features
             </a>
             <a
               href="#pricing"
@@ -60,7 +60,7 @@ export default function Nav() {
               onClick={(e) => scrollToSection(e, "how")}
               className="block px-4 py-2 text-muted-foreground hover:text-foreground transition-colors"
             >
-              How It Works
+              Features
             </a>
             <a
               href="#pricing"

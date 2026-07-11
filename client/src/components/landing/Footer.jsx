@@ -23,7 +23,7 @@ export default function Footer() {
             <ul className="space-y-2 text-sm">
               <li>
                 <a href="#how" className="text-muted-foreground hover:text-foreground transition-colors">
-                  How it works
+                  Features
                 </a>
               </li>
               <li>

@@ -26,10 +26,11 @@ export default function Pricing() {
       ctaVariant: "primary",
       popular: true,
       features: [
-        "Up to 5 documents",
-        "50 questions/month",
-        "Basic summaries",
+        "Up to 10 documents",
+        "100 questions/month",
+        "AI summaries with source citations",
       ],
+      extra: "No limits for new users (first 5 days)",
     },
     {
       name: "Team",
@@ -132,6 +133,14 @@ export default function Pricing() {
                     </span>
                   </div>
                 ))}
+              </div>
+
+              <div>
+                {tier.extra && (
+                  <p className="text-xs text-primary text-center">
+                    {tier.extra}
+                  </p>
+                )}
               </div>
             </motion.div>
           ))}
