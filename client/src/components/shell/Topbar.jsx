@@ -60,27 +60,49 @@ const Topbar = () => {
   };
 
   const handleQuickUpload = async (e) => {
-    const file = e.target.files[0];
+    const files = Array.from(e.target.files);
     e.target.value = "";
-    if (!file) return;
+    if (!files.length) return;
 
-    if (!isAllowedFile(file)) {
-      toast.error("Only PDF, DOCX, and TXT files are allowed.");
-      return;
+    const valid = files.filter(isAllowedFile);
+    const rejectedCount = files.length - valid.length;
+    if (rejectedCount > 0) {
+      toast.error(
+        rejectedCount === 1
+          ? "One file was skipped — only PDF, DOCX, and TXT are allowed."
+          : `${rejectedCount} files were skipped — only PDF, DOCX, and TXT are allowed.`
+      );
+    }
+    if (!valid.length) return;
+
+    setQuickUploading(true);
+    let uploaded = 0;
+    let skipped = 0;
+    let failed = 0;
+
+    for (const file of valid) {
+      try {
+        const formData = new FormData();
+        formData.append("document", file);
+        await uploadDocument(formData);
+        uploaded++;
+      } catch (error) {
+        if (error?.response?.status === 409) {
+          skipped++;
+        } else {
+          failed++;
+        }
+      }
     }
 
-    try {
-      setQuickUploading(true);
-      const formData = new FormData();
-      formData.append("document", file);
-      await uploadDocument(formData);
-      toast.success("Document uploaded successfully");
-      setHasDocuments(true);
-    } catch (error) {
-      toast.error(error?.response?.data?.message || "Upload failed");
-    } finally {
-      setQuickUploading(false);
-    }
+    setQuickUploading(false);
+    if (uploaded > 0) setHasDocuments(true);
+
+    const parts = [];
+    if (uploaded) parts.push(`${uploaded} uploaded`);
+    if (skipped) parts.push(`${skipped} already existed`);
+    if (failed) parts.push(`${failed} failed`);
+    toast[failed && !uploaded ? "error" : "success"](parts.join(", ") || "Done");
   };
 
   return (
@@ -104,6 +126,7 @@ const Topbar = () => {
         <input
           ref={quickUploadRef}
           type="file"
+          multiple
           className="hidden"
           accept={ACCEPT_ATTRIBUTE}
           onChange={handleQuickUpload}
