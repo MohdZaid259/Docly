@@ -5,23 +5,11 @@ import { motion } from "framer-motion";
 export default function Pricing() {
   const tiers = [
     {
-      name: "Free",
-      price: "$0",
-      cta: "Get Started",
-      ctaVariant: "secondary",
-      features: [
-        "Up to 5 documents",
-        "50 questions/month",
-        "Basic summaries",
-      ],
-    },
-    {
       name: "Pro",
       price: "$29",
       period: "/month",
-      cta: "Get Started",
-      ctaVariant: "primary",
-      popular: true,
+      cta: "Coming Soon",
+      comingSoon: true,
       features: [
         "Unlimited documents",
         "Unlimited questions",
@@ -29,6 +17,18 @@ export default function Pricing() {
         "Cross-document search",
         "Export & sharing",
         "Priority support",
+      ],
+    },
+    {
+      name: "Free",
+      price: "$0",
+      cta: "Get Started",
+      ctaVariant: "primary",
+      popular: true,
+      features: [
+        "Up to 5 documents",
+        "50 questions/month",
+        "Basic summaries",
       ],
     },
     {
@@ -71,7 +71,7 @@ export default function Pricing() {
               {tier.popular && (
                 <div className="absolute -top-3 left-4">
                   <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold">
-                    Most popular
+                    Available now
                   </span>
                 </div>
               )}
