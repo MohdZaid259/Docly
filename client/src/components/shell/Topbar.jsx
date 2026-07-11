@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Menu, Moon, Sun, Upload, LogOut, User, CreditCard } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 import useAuth from "@/hooks/useAuth";
 import useTheme from "@/hooks/useTheme";

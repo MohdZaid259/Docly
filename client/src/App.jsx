@@ -1,8 +1,11 @@
+import { Toaster } from "sonner";
 import useAuth from "./hooks/useAuth";
+import useTheme from "./hooks/useTheme";
 import AppRoutes from "./routes/AppRoute";
 
 function App() {
   const { loading } = useAuth();
+  const { theme } = useTheme();
 
   if (loading) {
     return (
@@ -15,7 +18,12 @@ function App() {
     );
   }
 
-  return <AppRoutes />;
+  return (
+    <>
+      <Toaster theme={theme} position="top-right" richColors closeButton />
+      <AppRoutes />
+    </>
+  );
 }
 
 export default App;

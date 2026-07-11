@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { streamQuestion } from "../api/chat.api";
 import { listConversations, createConversation, getConversation, deleteConversation } from "../api/conversation.api";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { FileText, MoreVertical, Pin, Trash2 } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";

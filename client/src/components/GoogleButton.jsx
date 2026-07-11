@@ -20,10 +20,14 @@ const GoogleLoginButton = () => {
   };
 
   return (
-    <div className="w-full max-w-xs rounded-2xl border border-border bg-muted/50 p-3">
+    <div className="flex justify-center [&>div]:w-auto!">
       <GoogleLogin
         onSuccess={handleSuccess}
         onError={() => console.log("Login Failed")}
+        theme="outline"
+        shape="pill"
+        size="medium"
+        text="signin_with"
       />
     </div>
   );

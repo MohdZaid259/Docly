@@ -63,7 +63,7 @@ Streaming Response
 
 **AI**
 
-* OpenRouter
+* MeshApi
 * GPT-4o Mini
 * `text-embedding-3-small`
 * MongoDB Atlas Vector Search

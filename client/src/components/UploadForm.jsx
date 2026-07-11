@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { X, FileText } from "lucide-react";
 import { uploadDocument } from "../api/doc.api";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { isAllowedFile, ACCEPT_ATTRIBUTE } from "@/helpers/fileValidation";
