@@ -2,6 +2,8 @@
 
 Docly is a Retrieval-Augmented Generation (RAG) application that allows users to upload documents, generate AI summaries, and chat with individual documents or their entire document library.
 
+Link: https://docly-ai.vercel.app
+
 ## Features
 
 * Google Authentication
